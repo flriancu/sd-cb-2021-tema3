@@ -218,7 +218,7 @@ void ListBooks(book_trie_t *t, int *nb_found, int limit)
 
     if (t->value)
     {
-        printf("[?] ");
+        printf("[?] ");                     // autocomplete marker
         PrintBookInfo(t->value, stdout);
         (*nb_found)++;
     }
@@ -274,7 +274,7 @@ void Test(book_trie_t *books)
             int ret = SearchBook(books, search_term, &book_info, &book_node);
             
             printf("\n%s:\n", search_term);
-            printf("[*] ");
+            printf("[*] ");                 // exact match marker
             PrintBookInfo(book_info, stdout);
 
             if (last_char == AC_MARKER)
@@ -284,6 +284,14 @@ void Test(book_trie_t *books)
             }
         }
         else if (0 == strcmp(command, "list_author"))
+        {
+            // TODO
+        }
+        else if (0 == strcmp(command, "search_by_author"))
+        {
+            // TODO
+        }
+        else if (0 == strcmp(command, "delete_book"))
         {
             // TODO
         }
