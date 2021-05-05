@@ -22,9 +22,11 @@ typedef struct book_trie_t
 #define AC_MARKER           '~'
 
 
-#define MALLOC(p, sz)       do { (p) = malloc(sz); 0 && printf("* malloc %p %d\n", (p), (int)(sz)); } while ((void)0,0)
-#define CALLOC(p, n, sz)    do { (p) = calloc((n), (sz)); 0 && printf("* calloc %p %d*%d=%d\n", (p), (int)(n), (int)(sz), (int)(n*sz)); } while ((void)0,0)
-#define FREE(p)             do { free(p); 0 && printf("* free %p\n", (p)); } while ((void)0,0)
+// Debug goodies
+#define VERBOSE             0
+#define MALLOC(p, sz)       do { (p) = malloc(sz); VERBOSE && printf("* malloc %p %d\n", (p), (int)(sz)); } while ((void)0,0)
+#define CALLOC(p, n, sz)    do { (p) = calloc((n), (sz)); VERBOSE && printf("* calloc %p %d*%d=%d\n", (p), (int)(n), (int)(sz), (int)(n*sz)); } while ((void)0,0)
+#define FREE(p)             do { free(p); VERBOSE && printf("* free %p\n", (p)); } while ((void)0,0)
 
 
 void PrintBookInfo(const book_info_t *book_info, FILE *fo)
