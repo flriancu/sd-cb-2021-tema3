@@ -171,7 +171,7 @@ void AddBook(book_trie_t *t, const char *key, book_info_t *value)
 }
 
 
-int SearchBookByPrefix(book_trie_t *t, const char *key, book_info_t **out_value, book_trie_t **out_node)
+int SearchBook(book_trie_t *t, const char *key, book_info_t **out_value, book_trie_t **out_node)
 {
     int i;
     int len = strlen(key);
@@ -264,24 +264,22 @@ void Test(book_trie_t *books)
 
             if (last_char == AC_MARKER)
             {
-                // TODO
                 search_term[strlen(search_term) - 1] = 0;
-            }
-            else
-            {
-                // TODO
             }
 
             book_info_t *book_info;
             book_trie_t *book_node;
-            int ret = SearchBookByPrefix(books, search_term, &book_info, &book_node);
+            int ret = SearchBook(books, search_term, &book_info, &book_node);
             
             printf("\n%s:\n", search_term);
             printf("[*] ");
             PrintBookInfo(book_info, stdout);
 
-            int nb_found = 0;
-            ListBooks(book_node, &nb_found, 3);
+            if (last_char == AC_MARKER)
+            {
+                int nb_found = 0;
+                ListBooks(book_node, &nb_found, 3);
+            }
         }
         else if (0 == strcmp(command, "list_author"))
         {
