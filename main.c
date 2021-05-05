@@ -8,6 +8,7 @@
 
 typedef struct book_info_t
 {
+    char *title;
     char *author;
     float rating;
     int nb_pages;
@@ -22,6 +23,9 @@ typedef struct book_trie_t
 } book_trie_t;
 
 
+#define AC_MARKER           '~'
+
+
 #define MALLOC(p, sz)       do { (p) = malloc(sz); 0 && printf("* malloc %p %d\n", (p), (int)(sz)); } while ((void)0,0)
 #define CALLOC(p, n, sz)    do { (p) = calloc((n), (sz)); 0 && printf("* calloc %p %d*%d=%d\n", (p), (int)(n), (int)(sz), (int)(n*sz)); } while ((void)0,0)
 #define FREE(p)             do { free(p); 0 && printf("* free %p\n", (p)); } while ((void)0,0)
@@ -29,10 +33,18 @@ typedef struct book_trie_t
 
 void PrintBookInfo(const book_info_t *book_info, FILE *fo)
 {
-    fprintf(fo, "[%s] [%d pg.] %.2f",
-        book_info->author,
-        book_info->nb_pages,
-        book_info->rating);
+    if (book_info)
+    {
+        fprintf(fo, "%s, %s, %.2f, %d\n",
+            book_info->title,
+            book_info->author,
+            book_info->rating,
+            book_info->nb_pages);
+    }
+    else
+    {
+        fprintf(fo, "-\n");
+    }
 }
 
 
@@ -71,12 +83,15 @@ int GetIndexOf(char c)
 }
 
 
-void AllocBookInfo(book_info_t **b, char *author, float rating, int nb_pages)
+void AllocBookInfo(book_info_t **b, char *title, char *author, float rating, int nb_pages)
 {
     MALLOC(*b, sizeof(book_info_t));
+
     MALLOC((*b)->author, sizeof(char) * (strlen(author) + 1));
+    MALLOC((*b)->title, sizeof(char) * (strlen(title) + 1));
 
     memcpy((*b)->author, author, sizeof(char) * (strlen(author) + 1));
+    memcpy((*b)->title, title, sizeof(char) * (strlen(title) + 1));
     (*b)->rating = rating;
     (*b)->nb_pages = nb_pages;
 }
@@ -85,6 +100,7 @@ void AllocBookInfo(book_info_t **b, char *author, float rating, int nb_pages)
 void FreeBookInfo(book_info_t **b)
 {
     FREE((*b)->author);
+    FREE((*b)->title);
     FREE(*b);
     *b = NULL;
 }
@@ -161,7 +177,7 @@ void AddBook(book_trie_t *t, const char *key, book_info_t *value)
 }
 
 
-int SearchBook(book_trie_t *t, const char *key, book_info_t **out_value)
+int SearchBookByPrefix(book_trie_t *t, const char *key, book_info_t **out_value, book_trie_t **out_node)
 {
     int i;
     int len = strlen(key);
@@ -173,6 +189,8 @@ int SearchBook(book_trie_t *t, const char *key, book_info_t **out_value)
 
         if (node->children[index] == NULL)
         {
+            // Prefix not in tree
+            *out_node = NULL;
             *out_value = NULL;
             return 0;
         }
@@ -180,14 +198,40 @@ int SearchBook(book_trie_t *t, const char *key, book_info_t **out_value)
         node = node->children[index];
     }
 
-    if (node && node->is_word)
+    if (node->is_word)
     {
+        // Prefix in tree and is word
+        *out_node = node;
         *out_value = node->value;
         return 1;
     }
 
+    // Prefix in tree but is not word
+    *out_node = node;
     *out_value = NULL;
     return 0;
+}
+
+
+void ListBooks(book_trie_t *t, int *nb_found, int limit)
+{
+    if (t == NULL || *nb_found >= limit)
+    {
+        return;
+    }
+
+    if (t->value)
+    {
+        printf("[?] ");
+        PrintBookInfo(t->value, stdout);
+        (*nb_found)++;
+    }
+
+    int alphabet_sz = GetAlphabetSize();
+    for (int i = 0; i < alphabet_sz; ++i)
+    {
+        ListBooks(t->children[i], nb_found, limit);
+    }
 }
 
 
@@ -216,7 +260,7 @@ void Test(book_trie_t *books)
 
             book_info_t *b;
 
-            AllocBookInfo(&b, author, (float)atof(rating), atoi(nb_pages));
+            AllocBookInfo(&b, title, author, (float)atof(rating), atoi(nb_pages));
             AddBook(books, title, b);
         }
         else if (0 == strcmp(command, "search_book"))
@@ -224,7 +268,7 @@ void Test(book_trie_t *books)
             char *search_term = strtok(NULL, "\n");
             char last_char = search_term[strlen(search_term) - 1];
 
-            if (last_char == '~')
+            if (last_char == AC_MARKER)
             {
                 // TODO
                 search_term[strlen(search_term) - 1] = 0;
@@ -235,11 +279,15 @@ void Test(book_trie_t *books)
             }
 
             book_info_t *book_info;
-            int ret = SearchBook(books, search_term, &book_info);
+            book_trie_t *book_node;
+            int ret = SearchBookByPrefix(books, search_term, &book_info, &book_node);
             
-            printf("%20s: ", search_term);
-            ret ? PrintBookInfo(book_info, stdout) : printf("-");
-            printf("\n");
+            printf("\n%s:\n", search_term);
+            printf("[*] ");
+            PrintBookInfo(book_info, stdout);
+
+            int nb_found = 0;
+            ListBooks(book_node, &nb_found, 3);
         }
         else if (0 == strcmp(command, "list_author"))
         {

@@ -1,12 +1,15 @@
-add_book aa:ionel teodoreanu:10:256
+add_book lorelei:ionel teodoreanu:10:256
 add_book la lilieci:marin sorescu:9.8:500
 add_book la medeleni:ionel teodoreanu:8.22:768
 add_book amintiri din copilarie:ion creanga:9:550
+search_book x
+search_book a
 search_book la liliecix
 search_book la lilieci~
 search_book l~
 search_book la~
 search_book la ~
+search_book la l~
 search_book la medeleni
 search_book lo~
 search_book lorelei
