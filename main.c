@@ -3,9 +3,6 @@
 #include <string.h>
 
 
-#define COUNT_OF(arr) (sizeof(arr)/sizeof(arr[0]))
-
-
 typedef struct book_info_t
 {
     char *title;
@@ -17,7 +14,6 @@ typedef struct book_info_t
 
 typedef struct book_trie_t
 {
-    int is_word;
     book_info_t *value;
     struct book_trie_t **children;
 } book_trie_t;
@@ -112,7 +108,6 @@ void AllocTrieNode(book_trie_t **t)
 
     MALLOC(*t, sizeof(book_trie_t));
 
-    (*t)->is_word = 0;
     (*t)->value = NULL;
     CALLOC((*t)->children, alphabet_size, sizeof(book_trie_t *));
 }
@@ -173,7 +168,6 @@ void AddBook(book_trie_t *t, const char *key, book_info_t *value)
     }
 
     node->value = value;
-    node->is_word = 1;
 }
 
 
@@ -198,7 +192,7 @@ int SearchBookByPrefix(book_trie_t *t, const char *key, book_info_t **out_value,
         node = node->children[index];
     }
 
-    if (node->is_word)
+    if (node->value)
     {
         // Prefix in tree and is word
         *out_node = node;
