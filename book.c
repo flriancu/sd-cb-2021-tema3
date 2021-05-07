@@ -5,15 +5,15 @@
 #include <string.h>
 
 
-void PrintBookInfo(const book_info_t *book_info, FILE *fo)
+void PrintBookInfo(const book_info_t *info, FILE *fo)
 {
-    if (book_info)
+    if (info)
     {
         fprintf(fo, "%s, %s, %.2f, %d\n",
-            book_info->title,
-            book_info->author,
-            book_info->rating,
-            book_info->nb_pages);
+            info->title,
+            info->author,
+            info->rating,
+            info->nb_pages);
     }
     else
     {
@@ -22,24 +22,24 @@ void PrintBookInfo(const book_info_t *book_info, FILE *fo)
 }
 
 
-void AllocBookInfo(book_info_t **b, char *title, char *author, float rating, int nb_pages)
+void AllocBookInfo(book_info_t **info, char *title, char *author, float rating, int nb_pages)
 {
-    MALLOC(*b, sizeof(book_info_t));
+    MALLOC(*info, sizeof(book_info_t));
 
-    MALLOC((*b)->author, sizeof(char) * (strlen(author) + 1));
-    MALLOC((*b)->title, sizeof(char) * (strlen(title) + 1));
+    MALLOC((*info)->author, sizeof(char) * (strlen(author) + 1));
+    MALLOC((*info)->title, sizeof(char) * (strlen(title) + 1));
 
-    memcpy((*b)->author, author, sizeof(char) * (strlen(author) + 1));
-    memcpy((*b)->title, title, sizeof(char) * (strlen(title) + 1));
-    (*b)->rating = rating;
-    (*b)->nb_pages = nb_pages;
+    memcpy((*info)->author, author, sizeof(char) * (strlen(author) + 1));
+    memcpy((*info)->title, title, sizeof(char) * (strlen(title) + 1));
+    (*info)->rating = rating;
+    (*info)->nb_pages = nb_pages;
 }
 
 
-void FreeBookInfo(book_info_t **e)
+void FreeBookInfo(book_info_t **info)
 {
-    FREE((*e)->author);
-    FREE((*e)->title);
-    FREE(*e);
-    *e = NULL;
+    FREE((*info)->author);
+    FREE((*info)->title);
+    FREE(*info);
+    *info = NULL;
 }

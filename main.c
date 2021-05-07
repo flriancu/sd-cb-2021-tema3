@@ -1,7 +1,6 @@
 #include "book_trie.h"
 #include "author_trie.h"
-#include "author.h"
-#include "commands.h"
+#include "operations.h"
 #include "utils.h"
 
 #include <stdlib.h>
@@ -51,15 +50,17 @@ void Test(book_trie_t *books, author_trie_t *authors)
             book_trie_t *book_node;
             SearchBook(books, search_term, &book_node);
             
-            printf("\n%s:\n", search_term);
+            printf("\n<%s>\n", search_term);
             if (last_char == AC_MARKER)
             {
                 int nb_found = 0;
-                ListBooks(book_node, &nb_found, 3);
+
+                printf("%s\n", MARKER_POSSIBLE_MATCH);
+                PrintBookTrie(book_node, &nb_found, 3, stdout);
             }
             else
             {
-                printf("[*] ");                 // exact match marker
+                printf("%s\n", MARKER_EXACT_MATCH);
                 PrintBookInfo(book_node ? book_node->value : NULL, stdout);
             }
         }
@@ -76,19 +77,21 @@ void Test(book_trie_t *books, author_trie_t *authors)
             author_trie_t *author_node;
             SearchAuthor(authors, search_term, &author_node);
 
-            printf("\n%s:\n", search_term);
+            printf("\n<%s>\n", search_term);
             if (last_char == AC_MARKER)
             {
                 int nb_found = 0;
-                ListAuthors(author_node, &nb_found, 3);
+
+                printf("%s\n", MARKER_POSSIBLE_MATCH);
+                PrintAuthorTrie(author_node, &nb_found, 3, stdout);
             }
             else
             {
-                printf("[*] ");                 // exact match marker
-                PrintAuthorInfo(author_node->value ? author_node->value->value : NULL, stdout);
-            }
+                int nb_found = 0;
 
-            // TODO
+                printf("%s\n", MARKER_EXACT_MATCH);
+                PrintBookTrie(author_node ? author_node->value->books : NULL, &nb_found, -1, stdout);
+            }
         }
         else if (0 == strcmp(command, "search_by_author"))
         {

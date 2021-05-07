@@ -20,4 +20,7 @@ void FreeBookTrieNode(book_trie_t **t, int is_view);
 void FreeBookTrie(book_trie_t **t, int is_view);
 
 
+void PrintBookTrie(book_trie_t *t, int *nb_found, int limit, FILE *fo);
+
+
 #endif

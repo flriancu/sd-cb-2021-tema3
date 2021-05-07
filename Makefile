@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wextra -g
-OBJ=main.o author_trie.o author.o book_trie.o book.o commands.o utils.o
+OBJ=main.o author_trie.o author.o book_trie.o book.o operations.o utils.o
 TARGET=tema3
 
 build: $(TARGET)

@@ -13,13 +13,13 @@ typedef struct book_info_t
 } book_info_t;
 
 
-void PrintBookInfo(const book_info_t *book_info, FILE *fo);
+void PrintBookInfo(const book_info_t *info, FILE *fo);
 
 
-void AllocBookInfo(book_info_t **b, char *title, char *author, float rating, int nb_pages);
+void AllocBookInfo(book_info_t **info, char *title, char *author, float rating, int nb_pages);
 
 
-void FreeBookInfo(book_info_t **e);
+void FreeBookInfo(book_info_t **info);
 
 
 #endif

@@ -1,4 +1,4 @@
-#include "commands.h"
+#include "operations.h"
 #include "author.h"
 
 #include <string.h>
@@ -52,28 +52,6 @@ void SearchBook(book_trie_t *t, const char *key, book_trie_t **out_node)
 }
 
 
-void ListBooks(book_trie_t *t, int *nb_found, int limit)
-{
-    if (t == NULL || (limit >= 0 && *nb_found >= limit))
-    {
-        return;
-    }
-
-    if (t->value)
-    {
-        printf("[?] ");                 // autocomplete marker
-        PrintBookInfo(t->value, stdout);
-        (*nb_found)++;
-    }
-
-    int alphabet_sz = GetAlphabetSize();
-    for (int i = 0; i < alphabet_sz; ++i)
-    {
-        ListBooks(t->children[i], nb_found, limit);
-    }
-}
-
-
 void AddAuthor(author_trie_t *t, const char *key, book_info_t *value)
 {
     int i;
@@ -94,10 +72,15 @@ void AddAuthor(author_trie_t *t, const char *key, book_info_t *value)
 
     if (node->value == NULL)
     {
-        AllocBookTrieNode(&node->value);
+        AllocAuthorInfo(&node->value, key);
     }
 
-    AddBook(node->value, value->title, value);
+    if (node->value->books == NULL)
+    {
+        AllocBookTrieNode(&node->value->books);
+    }
+
+    AddBook(node->value->books, value->title, value);
 }
 
 
@@ -124,26 +107,4 @@ void SearchAuthor(author_trie_t *t, const char *key, author_trie_t **out_node)
     // If prefix in tree and is word, node->value is not null.
     // If prefix in tree but is not word, node->value is null.
     *out_node = node;
-}
-
-
-void ListAuthors(author_trie_t *t, int *nb_found, int limit)
-{
-    if (t == NULL || (limit >= 0 && *nb_found >= limit))
-    {
-        return;
-    }
-
-    if (t->value)
-    {
-        printf("[?] ");                 // autocomplete marker
-        PrintAuthorInfo(t->value ? t->value->value : NULL, stdout);
-        (*nb_found)++;
-    }
-
-    int alphabet_sz = GetAlphabetSize();
-    for (int i = 0; i < alphabet_sz; ++i)
-    {
-        ListAuthors(t->children[i], nb_found, limit);
-    }
 }

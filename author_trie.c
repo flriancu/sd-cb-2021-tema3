@@ -24,7 +24,7 @@ void FreeAuthorTrieNode(author_trie_t **t)
 
     if ((*t)->value)
     {
-        FreeBookTrie(&(*t)->value, TRUE);
+        FreeAuthorInfo(&(*t)->value);
     }
 
     FREE(*t);
@@ -48,4 +48,25 @@ void FreeAuthorTrie(author_trie_t **t)
     }
 
     FreeAuthorTrieNode(t);
+}
+
+
+void PrintAuthorTrie(author_trie_t *t, int *nb_found, int limit, FILE *fo)
+{
+    if (t == NULL || (limit >= 0 && *nb_found >= limit))
+    {
+        return;
+    }
+
+    if (t->value)
+    {
+        PrintAuthorInfo(t->value, stdout);
+        (*nb_found)++;
+    }
+
+    int alphabet_sz = GetAlphabetSize();
+    for (int i = 0; i < alphabet_sz; ++i)
+    {
+        PrintAuthorTrie(t->children[i], nb_found, limit, fo);
+    }
 }
