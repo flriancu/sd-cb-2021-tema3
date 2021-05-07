@@ -9,13 +9,19 @@
 void AddBook(book_trie_t *t, const char *key, book_info_t *value);
 
 
-int SearchBook(book_trie_t *t, const char *key, book_trie_t **out_node);
+void SearchBook(book_trie_t *t, const char *key, book_trie_t **out_node);
 
 
 void ListBooks(book_trie_t *t, int *nb_found, int limit);
 
 
 void AddAuthor(author_trie_t *t, const char *key, book_info_t *value);
+
+
+void SearchAuthor(author_trie_t *t, const char *key, author_trie_t **out_node);
+
+
+void ListAuthors(author_trie_t *t, int *nb_found, int limit);
 
 
 #endif

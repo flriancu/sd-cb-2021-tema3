@@ -19,7 +19,7 @@
 const char * GetAlphabet();
 
 
-const int GetAlphabetSize();
+int GetAlphabetSize();
 
 
 int GetIndexOf(char c);

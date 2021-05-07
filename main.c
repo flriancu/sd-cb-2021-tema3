@@ -1,5 +1,6 @@
 #include "book_trie.h"
 #include "author_trie.h"
+#include "author.h"
 #include "commands.h"
 #include "utils.h"
 
@@ -48,20 +49,45 @@ void Test(book_trie_t *books, author_trie_t *authors)
             }
 
             book_trie_t *book_node;
-            int ret = SearchBook(books, search_term, &book_node);
+            SearchBook(books, search_term, &book_node);
             
             printf("\n%s:\n", search_term);
-            printf("[*] ");                 // exact match marker
-            PrintBookInfo(book_node ? book_node->value : NULL, stdout);
-
             if (last_char == AC_MARKER)
             {
                 int nb_found = 0;
                 ListBooks(book_node, &nb_found, 3);
             }
+            else
+            {
+                printf("[*] ");                 // exact match marker
+                PrintBookInfo(book_node ? book_node->value : NULL, stdout);
+            }
         }
         else if (0 == strcmp(command, "list_author"))
         {
+            char *search_term = strtok(NULL, "\n");
+            char last_char = search_term[strlen(search_term) - 1];
+
+            if (last_char == AC_MARKER)
+            {
+                search_term[strlen(search_term) - 1] = 0;
+            }
+
+            author_trie_t *author_node;
+            SearchAuthor(authors, search_term, &author_node);
+
+            printf("\n%s:\n", search_term);
+            if (last_char == AC_MARKER)
+            {
+                int nb_found = 0;
+                ListAuthors(author_node, &nb_found, 3);
+            }
+            else
+            {
+                printf("[*] ");                 // exact match marker
+                PrintAuthorInfo(author_node->value ? author_node->value->value : NULL, stdout);
+            }
+
             // TODO
         }
         else if (0 == strcmp(command, "search_by_author"))

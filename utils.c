@@ -11,7 +11,7 @@ const char * GetAlphabet()
 }
 
 
-const int GetAlphabetSize()
+int GetAlphabetSize()
 {
     const char *alphabet = GetAlphabet();
 
@@ -22,7 +22,7 @@ const int GetAlphabetSize()
 int GetIndexOf(char c)
 {
     const char *alphabet = GetAlphabet();
-    const int alphabet_sz = GetAlphabetSize();
+    int alphabet_sz = GetAlphabetSize();
     int pos = 0;
 
     for (int i = 0; i < alphabet_sz; ++i)
