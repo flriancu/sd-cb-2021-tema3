@@ -23,4 +23,10 @@ void FreeBookTrie(book_trie_t **t, int is_view);
 void PrintBookTrie(book_trie_t *t, int *nb_found, int limit, FILE *fo);
 
 
+void AddBook(book_trie_t *t, const char *key, book_info_t *value);
+
+
+void SearchBook(book_trie_t *t, const char *key, book_trie_t **out_node);
+
+
 #endif

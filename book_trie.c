@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 
 void AllocBookTrieNode(book_trie_t **t)
@@ -73,4 +74,52 @@ void PrintBookTrie(book_trie_t *t, int *nb_found, int limit, FILE *fo)
     {
         PrintBookTrie(t->children[i], nb_found, limit, fo);
     }
+}
+
+
+void AddBook(book_trie_t *t, const char *key, book_info_t *value)
+{
+    int i;
+    int len = strlen(key);
+    book_trie_t *node = t;
+
+    for (i = 0; i < len; ++i)
+    {
+        int index = GetIndexOf(key[i]);
+
+        if (node->children[index] == NULL)
+        {
+            AllocBookTrieNode(&node->children[index]);
+        }
+
+        node = node->children[index];
+    }
+
+    node->value = value;
+}
+
+
+void SearchBook(book_trie_t *t, const char *key, book_trie_t **out_node)
+{
+    int i;
+    int len = strlen(key);
+    book_trie_t *node = t;
+
+    for (i = 0; i < len; ++i)
+    {
+        int index = GetIndexOf(key[i]);
+
+        if (node->children[index] == NULL)
+        {
+            // Prefix not in tree
+            *out_node = NULL;
+            return;
+        }
+
+        node = node->children[index];
+    }
+
+    // If prefix in tree and is word, node->value is not null.
+    // If prefix in tree but is not word, node->value is null.
+    *out_node = node;
 }
