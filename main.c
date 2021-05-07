@@ -1,154 +1,11 @@
+#include "book_trie.h"
+#include "author_trie.h"
+#include "utils.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-
-typedef struct book_info_t
-{
-    char *title;
-    char *author;
-    float rating;
-    int nb_pages;
-} book_info_t;
-
-
-typedef struct book_trie_t
-{
-    book_info_t *value;
-    struct book_trie_t **children;
-} book_trie_t;
-
-
-#define AC_MARKER           '~'
-
-
-// Debug goodies
-#define VERBOSE             0
-#define MALLOC(p, sz)       do { (p) = malloc(sz); VERBOSE && printf("* malloc %p %d\n", (p), (int)(sz)); } while ((void)0,0)
-#define CALLOC(p, n, sz)    do { (p) = calloc((n), (sz)); VERBOSE && printf("* calloc %p %d*%d=%d\n", (p), (int)(n), (int)(sz), (int)(n*sz)); } while ((void)0,0)
-#define FREE(p)             do { free(p); VERBOSE && printf("* free %p\n", (p)); } while ((void)0,0)
-
-
-void PrintBookInfo(const book_info_t *book_info, FILE *fo)
-{
-    if (book_info)
-    {
-        fprintf(fo, "%s, %s, %.2f, %d\n",
-            book_info->title,
-            book_info->author,
-            book_info->rating,
-            book_info->nb_pages);
-    }
-    else
-    {
-        fprintf(fo, "-\n");
-    }
-}
-
-
-const char * GetAlphabet()
-{
-    static const char *alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ- ";
-
-    return alphabet;
-}
-
-
-const int GetAlphabetSize()
-{
-    const char *alphabet = GetAlphabet();
-
-    return (int)strlen(alphabet);
-}
-
-
-int GetIndexOf(char c)
-{
-    const char *alphabet = GetAlphabet();
-    const int alphabet_sz = GetAlphabetSize();
-    int pos = 0;
-
-    for (int i = 0; i < alphabet_sz; ++i)
-    {
-        if (c == alphabet[i])
-        {
-            pos = i;
-            break;
-        }
-    }
-
-    return pos;
-}
-
-
-void AllocBookInfo(book_info_t **b, char *title, char *author, float rating, int nb_pages)
-{
-    MALLOC(*b, sizeof(book_info_t));
-
-    MALLOC((*b)->author, sizeof(char) * (strlen(author) + 1));
-    MALLOC((*b)->title, sizeof(char) * (strlen(title) + 1));
-
-    memcpy((*b)->author, author, sizeof(char) * (strlen(author) + 1));
-    memcpy((*b)->title, title, sizeof(char) * (strlen(title) + 1));
-    (*b)->rating = rating;
-    (*b)->nb_pages = nb_pages;
-}
-
-
-void FreeBookInfo(book_info_t **b)
-{
-    FREE((*b)->author);
-    FREE((*b)->title);
-    FREE(*b);
-    *b = NULL;
-}
-
-
-void AllocTrieNode(book_trie_t **t)
-{
-    int alphabet_size = GetAlphabetSize();
-
-    MALLOC(*t, sizeof(book_trie_t));
-
-    (*t)->value = NULL;
-    CALLOC((*t)->children, alphabet_size, sizeof(book_trie_t *));
-}
-
-
-void FreeTrieNode(book_trie_t **t)
-{
-    if ((*t)->children)
-    {
-        FREE((*t)->children);
-    }
-
-    if ((*t)->value)
-    {
-        FreeBookInfo(&(*t)->value);
-    }
-
-    FREE(*t);
-    *t = NULL;
-}
-
-
-void FreeTrie(book_trie_t **t)
-{
-    int i;
-    int alphabet_size = GetAlphabetSize();
-
-    if (*t == NULL)
-    {
-        return;
-    }
-
-    for (i = 0; i < alphabet_size; ++i)
-    {
-        FreeTrie(&(*t)->children[i]);
-    }
-
-    FreeTrieNode(t);
-}
 
 
 void AddBook(book_trie_t *t, const char *key, book_info_t *value)
@@ -163,7 +20,7 @@ void AddBook(book_trie_t *t, const char *key, book_info_t *value)
 
         if (node->children[index] == NULL)
         {
-            AllocTrieNode(&node->children[index]);
+            AllocBookTrieNode(&node->children[index]);
         }
 
         node = node->children[index];
@@ -231,7 +88,7 @@ void ListBooks(book_trie_t *t, int *nb_found, int limit)
 }
 
 
-void Test(book_trie_t *books)
+void Test(book_trie_t *books, author_trie_t *authors)
 {
     FILE *fi;
     const int k_buffer_len = 255;
@@ -304,12 +161,15 @@ void Test(book_trie_t *books)
 int main()
 {
     book_trie_t *books;
+    author_trie_t *authors;
 
-    AllocTrieNode(&books);
+    AllocBookTrieNode(&books);
+    AllocAuthorTrieNode(&authors);
 
-    Test(books);
+    Test(books, authors);
 
-    FreeTrie(&books);
+    FreeBookTrie(&books);
+    FreeAuthorTrie(&authors);
 
     return 0;
 }
