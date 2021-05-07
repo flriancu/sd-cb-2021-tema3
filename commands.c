@@ -1,5 +1,7 @@
 #include "commands.h"
 
+#include <string.h>
+
 
 void AddBook(book_trie_t *t, const char *key, book_info_t *value)
 {
@@ -23,7 +25,7 @@ void AddBook(book_trie_t *t, const char *key, book_info_t *value)
 }
 
 
-int SearchBook(book_trie_t *t, const char *key, book_info_t **out_value, book_trie_t **out_node)
+int SearchBook(book_trie_t *t, const char *key, book_trie_t **out_node)
 {
     int i;
     int len = strlen(key);
@@ -37,7 +39,6 @@ int SearchBook(book_trie_t *t, const char *key, book_info_t **out_value, book_tr
         {
             // Prefix not in tree
             *out_node = NULL;
-            *out_value = NULL;
             return 0;
         }
 
@@ -48,13 +49,11 @@ int SearchBook(book_trie_t *t, const char *key, book_info_t **out_value, book_tr
     {
         // Prefix in tree and is word
         *out_node = node;
-        *out_value = node->value;
         return 1;
     }
 
     // Prefix in tree but is not word
     *out_node = node;
-    *out_value = NULL;
     return 0;
 }
 

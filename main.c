@@ -47,13 +47,12 @@ void Test(book_trie_t *books, author_trie_t *authors)
                 search_term[strlen(search_term) - 1] = 0;
             }
 
-            book_info_t *book_info;
             book_trie_t *book_node;
-            int ret = SearchBook(books, search_term, &book_info, &book_node);
+            int ret = SearchBook(books, search_term, &book_node);
             
             printf("\n%s:\n", search_term);
             printf("[*] ");                 // exact match marker
-            PrintBookInfo(book_info, stdout);
+            PrintBookInfo(book_node ? book_node->value : NULL, stdout);
 
             if (last_char == AC_MARKER)
             {
