@@ -15,7 +15,7 @@ void AllocBookTrieNode(book_trie_t **t)
 }
 
 
-void FreeBookTrieNode(book_trie_t **t)
+void FreeBookTrieNode(book_trie_t **t, int hard_free)
 {
     if ((*t)->children)
     {
@@ -24,7 +24,10 @@ void FreeBookTrieNode(book_trie_t **t)
 
     if ((*t)->value)
     {
-        FreeBookInfo(&(*t)->value);
+        if (hard_free)
+        {
+            FreeBookInfo(&(*t)->value);
+        }
     }
 
     FREE(*t);
@@ -32,7 +35,7 @@ void FreeBookTrieNode(book_trie_t **t)
 }
 
 
-void FreeBookTrie(book_trie_t **t)
+void FreeBookTrie(book_trie_t **t, int hard_free)
 {
     int i;
     int alphabet_size = GetAlphabetSize();
@@ -44,8 +47,8 @@ void FreeBookTrie(book_trie_t **t)
 
     for (i = 0; i < alphabet_size; ++i)
     {
-        FreeBookTrie(&(*t)->children[i]);
+        FreeBookTrie(&(*t)->children[i], hard_free);
     }
 
-    FreeBookTrieNode(t);
+    FreeBookTrieNode(t, hard_free);
 }

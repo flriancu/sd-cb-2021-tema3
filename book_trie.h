@@ -14,10 +14,10 @@ typedef struct book_trie_t
 void AllocBookTrieNode(book_trie_t **t);
 
 
-void FreeBookTrieNode(book_trie_t **t);
+void FreeBookTrieNode(book_trie_t **t, int hard_free);
 
 
-void FreeBookTrie(book_trie_t **t);
+void FreeBookTrie(book_trie_t **t, int hard_free);
 
 
 #endif

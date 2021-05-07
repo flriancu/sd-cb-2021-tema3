@@ -79,3 +79,30 @@ void ListBooks(book_trie_t *t, int *nb_found, int limit)
         ListBooks(t->children[i], nb_found, limit);
     }
 }
+
+
+void AddAuthor(author_trie_t *t, const char *key, book_info_t *value)
+{
+    int i;
+    int len = strlen(key);
+    author_trie_t *node = t;
+
+    for (i = 0; i < len; ++i)
+    {
+        int index = GetIndexOf(key[i]);
+
+        if (node->children[index] == NULL)
+        {
+            AllocAuthorTrieNode(&node->children[index]);
+        }
+
+        node = node->children[index];
+    }
+
+    if (node->value == NULL)
+    {
+        AllocBookTrieNode(&node->value);
+    }
+
+    AddBook(node->value, value->title, value);
+}

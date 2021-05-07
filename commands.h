@@ -17,4 +17,7 @@ int SearchBook(book_trie_t *t, const char *key, book_info_t **out_value, book_tr
 void ListBooks(book_trie_t *t, int *nb_found, int limit);
 
 
+void AddAuthor(author_trie_t *t, const char *key, book_info_t *value);
+
+
 #endif

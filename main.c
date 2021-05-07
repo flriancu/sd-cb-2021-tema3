@@ -35,6 +35,7 @@ void Test(book_trie_t *books, author_trie_t *authors)
 
             AllocBookInfo(&b, title, author, (float)atof(rating), atoi(nb_pages));
             AddBook(books, title, b);
+            AddAuthor(authors, author, b);
         }
         else if (0 == strcmp(command, "search_book"))
         {
@@ -88,7 +89,7 @@ int main()
 
     Test(books, authors);
 
-    FreeBookTrie(&books);
+    FreeBookTrie(&books, 1);
     FreeAuthorTrie(&authors);
 
     return 0;
