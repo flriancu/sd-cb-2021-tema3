@@ -7,6 +7,9 @@
 #define TRUE                    (1)
 #define FALSE                   (0)
 
+#define IN
+#define OUT
+
 
 // Debug goodies
 #define VERBOSE                 (0)

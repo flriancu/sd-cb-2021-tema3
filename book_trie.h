@@ -2,6 +2,7 @@
 #define BOOK_TRIE_H
 
 #include "book.h"
+#include "utils.h"
 
 
 typedef struct book_trie_t
@@ -11,22 +12,37 @@ typedef struct book_trie_t
 } book_trie_t;
 
 
-void AllocBookTrieNode(book_trie_t **t);
+void AllocBookTrieNode(
+    OUT book_trie_t **t);
 
 
-void FreeBookTrieNode(book_trie_t **t, int is_view);
+void FreeBookTrieNode(
+    IN  book_trie_t **t, 
+    IN  int is_view);
 
 
-void FreeBookTrie(book_trie_t **t, int is_view);
+void FreeBookTrie(
+    IN  book_trie_t **t, 
+    IN  int is_view);
 
 
-void PrintBookTrie(book_trie_t *t, int *nb_found, int limit, FILE *fo);
+void PrintBookTrie(
+    IN  book_trie_t *t, 
+    IN  int *nb_found, 
+    IN  int limit, 
+    IN  FILE *fo);
 
 
-void AddBook(book_trie_t *t, const char *key, book_info_t *value);
+void AddBook(
+    IN  book_trie_t *t, 
+    IN  const char *key, 
+    IN  book_info_t *value);
 
 
-void SearchBook(book_trie_t *t, const char *key, book_trie_t **out_node);
+void SearchBook(
+    IN  book_trie_t *t, 
+    IN  const char *key, 
+    OUT book_trie_t **out_node);
 
 
 #endif

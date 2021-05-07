@@ -2,6 +2,7 @@
 #define AUTHOR_H
 
 #include "book_trie.h"
+#include "utils.h"
 
 #include <stdio.h>
 
@@ -13,13 +14,18 @@ typedef struct author_info_t
 } author_info_t;
 
 
-void PrintAuthorInfo(const author_info_t *info, FILE *fo);
+void PrintAuthorInfo(
+    IN  const author_info_t *info, 
+    IN  FILE *fo);
 
 
-void AllocAuthorInfo(author_info_t **info, const char *name);
+void AllocAuthorInfo(
+    OUT author_info_t **info, 
+    IN  const char *name);
 
 
-void FreeAuthorInfo(author_info_t **info);
+void FreeAuthorInfo(
+    IN  author_info_t **info);
 
 
 #endif

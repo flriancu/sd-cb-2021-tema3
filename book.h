@@ -1,6 +1,8 @@
 #ifndef BOOK_H
 #define BOOK_H
 
+#include "utils.h"
+
 #include <stdio.h>
 
 
@@ -13,13 +15,21 @@ typedef struct book_info_t
 } book_info_t;
 
 
-void PrintBookInfo(const book_info_t *info, FILE *fo);
+void PrintBookInfo(
+    IN  const book_info_t *info, 
+    IN  FILE *fo);
 
 
-void AllocBookInfo(book_info_t **info, char *title, char *author, float rating, int nb_pages);
+void AllocBookInfo(
+    OUT book_info_t **info, 
+    IN  char *title, 
+    IN  char *author, 
+    IN  float rating, 
+    IN  int nb_pages);
 
 
-void FreeBookInfo(book_info_t **info);
+void FreeBookInfo(
+    IN  book_info_t **info);
 
 
 #endif

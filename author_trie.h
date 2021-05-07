@@ -2,6 +2,7 @@
 #define AUTHOR_TRIE_H
 
 #include "author.h"
+#include "utils.h"
 
 
 typedef struct author_trie_t
@@ -11,22 +12,35 @@ typedef struct author_trie_t
 } author_trie_t;
 
 
-void AllocAuthorTrieNode(author_trie_t **t);
+void AllocAuthorTrieNode(
+    OUT author_trie_t **t);
 
 
-void FreeAuthorTrieNode(author_trie_t **t);
+void FreeAuthorTrieNode(
+    IN  author_trie_t **t);
 
 
-void FreeAuthorTrie(author_trie_t **t);
+void FreeAuthorTrie(
+    IN  author_trie_t **t);
 
 
-void PrintAuthorTrie(author_trie_t *t, int *nb_found, int limit, FILE *fo);
+void PrintAuthorTrie(
+    IN  author_trie_t *t, 
+    IN  int *nb_found, 
+    IN  int limit, 
+    IN  FILE *fo);
 
 
-void AddAuthor(author_trie_t *t, const char *key, book_info_t *value);
+void AddAuthor(
+    IN  author_trie_t *t, 
+    IN  const char *key, 
+    IN  book_info_t *value);
 
 
-void SearchAuthor(author_trie_t *t, const char *key, author_trie_t **out_node);
+void SearchAuthor(
+    IN  author_trie_t *t, 
+    IN  const char *key, 
+    OUT author_trie_t **out_node);
 
 
 #endif
