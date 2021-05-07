@@ -89,7 +89,7 @@ int main()
 
     Test(books, authors);
 
-    FreeBookTrie(&books, 1);
+    FreeBookTrie(&books, FALSE);
     FreeAuthorTrie(&authors);
 
     return 0;

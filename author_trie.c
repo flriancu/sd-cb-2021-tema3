@@ -24,7 +24,7 @@ void FreeAuthorTrieNode(author_trie_t **t)
 
     if ((*t)->value)
     {
-        FreeBookTrie(&(*t)->value, 0);
+        FreeBookTrie(&(*t)->value, TRUE);
     }
 
     FREE(*t);

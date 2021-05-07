@@ -5,6 +5,10 @@
 #define AC_MARKER           '~'
 
 
+#define TRUE                (1)
+#define FALSE               (0)
+
+
 // Debug goodies
 #define VERBOSE             0
 #define MALLOC(p, sz)       do { (p) = malloc(sz); VERBOSE && printf("* malloc %p %d\n", (p), (int)(sz)); } while ((void)0,0)
