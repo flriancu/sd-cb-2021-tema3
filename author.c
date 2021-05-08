@@ -7,6 +7,11 @@
 
 void PrintAuthorInfo(const author_info_t *info, FILE *fo)
 {
+    if (!fo)
+    {
+        return;
+    }
+    
     if (info)
     {
         fprintf(fo, "%s\n",

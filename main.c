@@ -7,17 +7,10 @@
 #include <string.h>
 
 
-void Test(book_trie_t *books, author_trie_t *authors)
+void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
 {
-    FILE *fi;
     const int k_buffer_len = 255;
     char buffer[k_buffer_len];
-
-    fi = fopen("commands.txt", "r");
-    if (fi == NULL)
-    {
-        return;
-    }
 
     while (fgets(buffer, k_buffer_len, fi))
     {
@@ -49,18 +42,18 @@ void Test(book_trie_t *books, author_trie_t *authors)
             book_trie_t *book_node;
             SearchBook(books, search_term, &book_node);
             
-            printf("\n<%s>\n", search_term);
+            DPRINTF("\n<%s>\n", search_term);
             if (last_char == TOKEN_AUTOCOMPLETE)
             {
                 int nb_found = 0;
 
-                printf("%s\n", MARKER_PREFIX_MATCH);
-                PrintBookTrie(book_node, &nb_found, 3, stdout);
+                DPRINTF("%s\n", MARKER_PREFIX_MATCH);
+                PrintBookTrie(book_node, &nb_found, 3, fo);
             }
             else
             {
-                printf("%s\n", MARKER_EXACT_MATCH);
-                PrintBookInfo(book_node ? book_node->value : NULL, stdout);
+                DPRINTF("%s\n", MARKER_EXACT_MATCH);
+                PrintBookInfo(book_node ? book_node->value : NULL, fo);
             }
         }
         else if (0 == strcmp(command, "list_author"))
@@ -76,20 +69,20 @@ void Test(book_trie_t *books, author_trie_t *authors)
             author_trie_t *author_node;
             SearchAuthor(authors, search_term, &author_node);
 
-            printf("\n<%s>\n", search_term);
+            DPRINTF("\n<%s>\n", search_term);
             if (last_char == TOKEN_AUTOCOMPLETE)
             {
                 int nb_found = 0;
 
-                printf("%s\n", MARKER_PREFIX_MATCH);
-                PrintAuthorTrie(author_node, &nb_found, 3, stdout);
+                DPRINTF("%s\n", MARKER_PREFIX_MATCH);
+                PrintAuthorTrie(author_node, &nb_found, 3, fo);
             }
             else
             {
                 int nb_found = 0;
 
-                printf("%s\n", MARKER_EXACT_MATCH);
-                PrintBookTrie(author_node ? author_node->value->books : NULL, &nb_found, -1, stdout);
+                DPRINTF("%s\n", MARKER_EXACT_MATCH);
+                PrintBookTrie(author_node ? author_node->value->books : NULL, &nb_found, -1, fo);
             }
         }
         else if (0 == strcmp(command, "search_by_author"))
@@ -117,7 +110,7 @@ void Test(book_trie_t *books, author_trie_t *authors)
             author_trie_t *author_node;
             SearchAuthor(authors, search_term_author, &author_node);
 
-            printf("\n<%s:%s>\n", search_term_author, search_term_book);
+            DPRINTF("\n<%s:%s>\n", search_term_author, search_term_book);
             if (last_char == TOKEN_AUTOCOMPLETE)
             {
                 if (search_term_book == NULL)
@@ -126,8 +119,8 @@ void Test(book_trie_t *books, author_trie_t *authors)
                     // same as `list_author <prefix_author>~`
                     int nb_found = 0;
 
-                    printf("%s\n", MARKER_PREFIX_MATCH);
-                    PrintAuthorTrie(author_node, &nb_found, 3, stdout);
+                    DPRINTF("%s\n", MARKER_PREFIX_MATCH);
+                    PrintAuthorTrie(author_node, &nb_found, 3, fo);
                 }
                 else
                 {
@@ -140,13 +133,13 @@ void Test(book_trie_t *books, author_trie_t *authors)
 
                         int nb_found = 0;
 
-                        printf("%s\n", MARKER_PREFIX_MATCH);
-                        PrintBookTrie(book_node, &nb_found, 3, stdout);
+                        DPRINTF("%s\n", MARKER_PREFIX_MATCH);
+                        PrintBookTrie(book_node, &nb_found, 3, fo);
                     }
                     else
                     {
-                        printf("%s\n", MARKER_PREFIX_MATCH);
-                        printf("-\n");
+                        DPRINTF("%s\n", MARKER_PREFIX_MATCH);
+                        fprintf(fo, "-\n");
                     }
                 }
             }
@@ -158,23 +151,51 @@ void Test(book_trie_t *books, author_trie_t *authors)
                     book_trie_t *book_node;
                     SearchBook(author_node->value->books, search_term_book, &book_node);
 
-                    printf("%s\n", MARKER_EXACT_MATCH);
-                    PrintBookInfo(book_node ? book_node->value : NULL, stdout);
+                    DPRINTF("%s\n", MARKER_EXACT_MATCH);
+                    PrintBookInfo(book_node ? book_node->value : NULL, fo);
                 }
                 else
                 {
-                    printf("%s\n", MARKER_EXACT_MATCH);
-                    printf("-\n");
+                    DPRINTF("%s\n", MARKER_EXACT_MATCH);
+                    fprintf(fo, "-\n");
                 }
             }
         }
         else if (0 == strcmp(command, "delete_book"))
         {
-            // TODO
+            char *title = strtok(NULL, "\n");
+
+            book_trie_t *book_node;
+            SearchBook(books, title, &book_node);
+
+            if (book_node)
+            {
+                author_trie_t *author_node;
+                SearchAuthor(authors, book_node->value->author, &author_node);
+                DeleteBook(&author_node->value->books, title, TRUE);
+
+                if (author_node->value->books == NULL)
+                {
+                    DeleteAuthor(&author_node, author_node->value->name);
+                }
+
+                DeleteBook(&books, title, FALSE);
+                DPRINTF("%s\n", MARKER_DELETE_MATCH);
+
+                int nb_found = 0;
+                PrintBookTrie(books, &nb_found, -1, fo);
+                if (nb_found == 0)
+                {
+                    fprintf(fo, "-\n");
+                }
+            }
+            else
+            {
+                DPRINTF("%s\n", MARKER_DELETE_MATCH);
+                fprintf(fo, "-\n");
+            }
         }
     }
-
-    fclose(fi);
 }
 
 
@@ -186,7 +207,15 @@ int main()
     AllocBookTrieNode(&books);
     AllocAuthorTrieNode(&authors);
 
-    Test(books, authors);
+    FILE *fi = fopen("commands.txt", "r");
+    if (fi == NULL)
+    {
+        return -1;
+    }
+
+    Test(books, authors, fi, stdout);
+
+    fclose(fi);
 
     FreeBookTrie(&books, FALSE);
     FreeAuthorTrie(&authors);

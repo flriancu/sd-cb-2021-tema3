@@ -2,7 +2,6 @@
 #include "utils.h"
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 
 
@@ -62,7 +61,7 @@ void PrintAuthorTrie(author_trie_t *t, int *nb_found, int limit, FILE *fo)
 
     if (t->value)
     {
-        PrintAuthorInfo(t->value, stdout);
+        PrintAuthorInfo(t->value, fo);
         (*nb_found)++;
     }
 
@@ -103,6 +102,65 @@ void AddAuthor(author_trie_t *t, const char *key, book_info_t *value)
     }
 
     AddBook(node->value->books, value->title, value);
+}
+
+
+static int IsAuthorNodeEmpty(author_trie_t *t)
+{
+    if (t == NULL)
+    {
+        return TRUE;
+    }
+
+    int alphabet_sz = GetAlphabetSize();
+
+    for (int i = 0; i < alphabet_sz; ++i)
+    {
+        if (t->children[i] != NULL)
+        {
+            return FALSE;
+        }
+    }
+
+    return TRUE;
+}
+
+
+void DeleteAuthorAux(author_trie_t **t, const char *key, int depth)
+{
+    if (*t == NULL)
+    {
+        return;
+    }
+
+    if (depth == (int)strlen(key))
+    {
+        if ((*t)->value != NULL)
+        {
+            FreeAuthorInfo(&(*t)->value);
+        }
+
+        if (IsAuthorNodeEmpty(*t))
+        {
+            FreeAuthorTrieNode(t);
+        }
+
+        return;
+    }
+
+    int index = GetIndexOf(key[depth]);
+    DeleteAuthorAux(&(*t)->children[index], key, depth + 1);
+
+    if (IsAuthorNodeEmpty(*t) && (*t)->value == NULL)
+    {
+        FreeAuthorTrieNode(t);
+    }
+}
+
+
+void DeleteAuthor(author_trie_t **t, const char *key)
+{
+    DeleteAuthorAux(t, key, 0);
 }
 
 

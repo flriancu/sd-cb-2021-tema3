@@ -2,7 +2,6 @@
 #include "utils.h"
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 
 
@@ -96,6 +95,77 @@ void AddBook(book_trie_t *t, const char *key, book_info_t *value)
     }
 
     node->value = value;
+}
+
+
+static int IsBookNodeEmpty(book_trie_t *t)
+{
+    if (t == NULL)
+    {
+        return TRUE;
+    }
+
+    int alphabet_sz = GetAlphabetSize();
+
+    for (int i = 0; i < alphabet_sz; ++i)
+    {
+        if (t->children[i] != NULL)
+        {
+            return FALSE;
+        }
+    }
+
+    return TRUE;
+}
+
+
+static void DeleteBookAux(book_trie_t **t, const char *key, int depth, int is_view)
+{
+    if (*t == NULL)
+    {
+        return;
+    }
+
+    if (depth == (int)strlen(key))
+    {
+        if ((*t)->value != NULL)
+        {
+            if (!is_view)
+            {
+                FreeBookInfo(&(*t)->value);
+            }
+            else
+            {
+                (*t)->value = NULL;
+            }
+        }
+
+        if (IsBookNodeEmpty(*t))
+        {
+            FreeBookTrieNode(t, is_view);
+        }
+
+        return;
+    }
+
+    int index = GetIndexOf(key[depth]);
+    DeleteBookAux(&(*t)->children[index], key, depth + 1, is_view);
+
+    if (!is_view && depth == 0)
+    {
+        return;
+    }
+
+    if (IsBookNodeEmpty(*t) && (*t)->value == NULL)
+    {
+        FreeBookTrieNode(t, is_view);
+    }
+}
+
+
+void DeleteBook(book_trie_t **t, const char *key, int is_view)
+{
+    DeleteBookAux(t, key, 0, is_view);
 }
 
 

@@ -28,7 +28,7 @@ void FreeBookTrie(
 
 void PrintBookTrie(
     IN  book_trie_t *t, 
-    IN  int *nb_found, 
+    OUT int *nb_found, 
     IN  int limit, 
     IN  FILE *fo);
 
@@ -37,6 +37,12 @@ void AddBook(
     IN  book_trie_t *t, 
     IN  const char *key, 
     IN  book_info_t *value);
+
+
+void DeleteBook(
+    IN  book_trie_t **t, 
+    IN  const char *key,
+    IN  int is_view);
 
 
 void SearchBook(

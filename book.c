@@ -7,6 +7,11 @@
 
 void PrintBookInfo(const book_info_t *info, FILE *fo)
 {
+    if (!fo)
+    {
+        return;
+    }
+    
     if (info)
     {
         fprintf(fo, "%s, %s, %.2f, %d\n",

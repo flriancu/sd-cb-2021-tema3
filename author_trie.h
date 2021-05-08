@@ -26,7 +26,7 @@ void FreeAuthorTrie(
 
 void PrintAuthorTrie(
     IN  author_trie_t *t, 
-    IN  int *nb_found, 
+    OUT int *nb_found, 
     IN  int limit, 
     IN  FILE *fo);
 
@@ -35,6 +35,11 @@ void AddAuthor(
     IN  author_trie_t *t, 
     IN  const char *key, 
     IN  book_info_t *value);
+
+
+void DeleteAuthor(
+    IN author_trie_t **t, 
+    IN const char *key);
 
 
 void SearchAuthor(
