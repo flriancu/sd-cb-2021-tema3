@@ -2,7 +2,7 @@
 #define UTILS_H
 
 
-#define AC_MARKER               '~'
+#define TOKEN_AUTOCOMPLETE      '~'
 
 #define TRUE                    (1)
 #define FALSE                   (0)
@@ -18,8 +18,8 @@
 #define CALLOC(p, n, sz)        do { (p) = calloc((n), (sz)); VERBOSE && printf("* calloc %p %d*%d=%d\n", (p), (int)(n), (int)(sz), (int)(n*sz)); } while ((void)0,0)
 #define FREE(p)                 do { free(p); VERBOSE && printf("* free %p\n", (p)); } while ((void)0,0)
 
-#define MARKER_EXACT_MATCH      "[*] "
-#define MARKER_POSSIBLE_MATCH   "[?] "
+#define MARKER_EXACT_MATCH      "[*]"
+#define MARKER_PREFIX_MATCH     "[?]"
 
 
 const char * GetAlphabet();
