@@ -61,6 +61,7 @@ void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
 
                 if (book_node)
                 {
+                    fprintf(fo, "Informatii recomandare: ");
                     PrintBookInfo(book_node->value, TRUE, fo);
                 }
                 else
@@ -187,6 +188,7 @@ void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
                     SearchBook(author_node->value->books, search_term_book, &book_node);
 
                     DPRINTF("%s\n", MARKER_EXACT_MATCH);
+                    fprintf(fo, "Informatii recomandare: ");
                     PrintBookInfo(book_node ? book_node->value : NULL, TRUE, fo);
                 }
                 else

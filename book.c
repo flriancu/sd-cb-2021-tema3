@@ -16,7 +16,7 @@ void PrintBookInfo(const book_info_t *info, int full_description, FILE *fo)
     {
         if (full_description)
         {
-            fprintf(fo, "Informatii recomandare: %s, %s, %d, %d\n",
+            fprintf(fo, "%s, %s, %d, %d\n",
                 info->title,
                 info->author,
                 (int)info->rating,
