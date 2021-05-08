@@ -199,21 +199,38 @@ void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
 }
 
 
-int main()
+int main(const int argc, const char **argv)
 {
+    if (!USE_CUSTOM_ARGS)
+    {
+        if (argc != 3)
+        {
+            printf("Usage: <app> <input.txt> <output.txt>\n");
+            return -1;
+        }
+    }
+
+    FILE *fi = fopen(USE_CUSTOM_ARGS ? CUSTOM_ARG_INPUT : argv[1], "r");
+    if (fi == NULL)
+    {
+        printf("Could not open input file\n");
+        return -1;
+    }
+
+    FILE *fo = USE_CUSTOM_ARGS ? stdout : fopen(argv[2], "w");
+    if (fo == NULL)
+    {
+        printf("Could not open output file\n");
+        return -1;
+    }
+
     book_trie_t *books;
     author_trie_t *authors;
 
     AllocBookTrieNode(&books);
     AllocAuthorTrieNode(&authors);
 
-    FILE *fi = fopen("commands.txt", "r");
-    if (fi == NULL)
-    {
-        return -1;
-    }
-
-    Test(books, authors, fi, stdout);
+    Test(books, authors, fi, fo);
 
     fclose(fi);
 

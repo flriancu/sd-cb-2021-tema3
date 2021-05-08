@@ -21,8 +21,11 @@ int GetIndexOf(char c);
 
 
 // Debug goodies
-#define VERBOSE_MEMORY          (0)
-#define VERBOSE_DEBUG           (1)
+#define VERBOSE_MEMORY          FALSE
+#define VERBOSE_DEBUG           TRUE
+
+#define USE_CUSTOM_ARGS         TRUE
+#define CUSTOM_ARG_INPUT        "commands.txt"
 
 #define MALLOC(p, sz)           do { (p) = malloc(sz); VERBOSE_MEMORY && printf("* malloc %p %d\n", (p), (int)(sz)); } while ((void)0,0)
 #define CALLOC(p, n, sz)        do { (p) = calloc((n), (sz)); VERBOSE_MEMORY && printf("* calloc %p %d*%d=%d\n", (p), (int)(n), (int)(sz), (int)(n*sz)); } while ((void)0,0)
