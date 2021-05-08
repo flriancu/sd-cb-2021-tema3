@@ -30,6 +30,7 @@ void PrintBookTrie(
     IN  book_trie_t *t, 
     OUT int *nb_found, 
     IN  int limit, 
+    IN  int full_description,
     IN  FILE *fo);
 
 

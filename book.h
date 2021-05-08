@@ -17,6 +17,7 @@ typedef struct book_info_t
 
 void PrintBookInfo(
     IN  const book_info_t *info, 
+    IN  int full_description,
     IN  FILE *fo);
 
 

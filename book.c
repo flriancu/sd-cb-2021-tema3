@@ -5,7 +5,7 @@
 #include <string.h>
 
 
-void PrintBookInfo(const book_info_t *info, FILE *fo)
+void PrintBookInfo(const book_info_t *info, int full_description, FILE *fo)
 {
     if (!fo)
     {
@@ -14,15 +14,19 @@ void PrintBookInfo(const book_info_t *info, FILE *fo)
     
     if (info)
     {
-        fprintf(fo, "%s, %s, %.2f, %d\n",
-            info->title,
-            info->author,
-            info->rating,
-            info->nb_pages);
-    }
-    else
-    {
-        fprintf(fo, "-\n");
+        if (full_description)
+        {
+            fprintf(fo, "Informatii recomandare: %s, %s, %d, %d\n",
+                info->title,
+                info->author,
+                (int)info->rating,
+                info->nb_pages);
+        }
+        else
+        {
+            fprintf(fo, "%s\n",
+                info->title);
+        }
     }
 }
 

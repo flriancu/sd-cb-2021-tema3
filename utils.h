@@ -20,13 +20,14 @@ int GetAlphabetSize();
 int GetIndexOf(char c);
 
 
-// Debug goodies
+// Debug configuration
 #define VERBOSE_MEMORY          FALSE
-#define VERBOSE_DEBUG           TRUE
+#define VERBOSE_DEBUG           FALSE
 
 #define USE_CUSTOM_ARGS         TRUE
 #define CUSTOM_ARG_INPUT        "commands.txt"
 
+// Debug utilities
 #define MALLOC(p, sz)           do { (p) = malloc(sz); VERBOSE_MEMORY && printf("* malloc %p %d\n", (p), (int)(sz)); } while ((void)0,0)
 #define CALLOC(p, n, sz)        do { (p) = calloc((n), (sz)); VERBOSE_MEMORY && printf("* calloc %p %d*%d=%d\n", (p), (int)(n), (int)(sz), (int)(n*sz)); } while ((void)0,0)
 #define FREE(p)                 do { free(p); VERBOSE_MEMORY && printf("* free %p\n", (p)); } while ((void)0,0)

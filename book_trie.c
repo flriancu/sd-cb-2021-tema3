@@ -55,7 +55,7 @@ void FreeBookTrie(book_trie_t **t, int is_view)
 }
 
 
-void PrintBookTrie(book_trie_t *t, int *nb_found, int limit, FILE *fo)
+void PrintBookTrie(book_trie_t *t, int *nb_found, int limit, int full_description, FILE *fo)
 {
     if (t == NULL || (limit >= 0 && *nb_found >= limit))
     {
@@ -64,14 +64,14 @@ void PrintBookTrie(book_trie_t *t, int *nb_found, int limit, FILE *fo)
 
     if (t->value)
     {
-        PrintBookInfo(t->value, fo);
+        PrintBookInfo(t->value, full_description, fo);
         (*nb_found)++;
     }
 
     int alphabet_sz = GetAlphabetSize();
     for (int i = 0; i < alphabet_sz; ++i)
     {
-        PrintBookTrie(t->children[i], nb_found, limit, fo);
+        PrintBookTrie(t->children[i], nb_found, limit, full_description, fo);
     }
 }
 

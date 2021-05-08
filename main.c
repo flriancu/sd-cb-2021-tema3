@@ -48,12 +48,25 @@ void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
                 int nb_found = 0;
 
                 DPRINTF("%s\n", MARKER_PREFIX_MATCH);
-                PrintBookTrie(book_node, &nb_found, 3, fo);
+                PrintBookTrie(book_node, &nb_found, 3, FALSE, fo);
+
+                if (nb_found == 0)
+                {
+                    fprintf(fo, "Nicio carte gasita.\n");
+                }
             }
             else
             {
                 DPRINTF("%s\n", MARKER_EXACT_MATCH);
-                PrintBookInfo(book_node ? book_node->value : NULL, fo);
+
+                if (book_node)
+                {
+                    PrintBookInfo(book_node->value, TRUE, fo);
+                }
+                else
+                {
+                    fprintf(fo, "Cartea %s nu exista in recomandarile tale.\n", search_term);
+                }
             }
         }
         else if (0 == strcmp(command, "list_author"))
@@ -76,13 +89,25 @@ void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
 
                 DPRINTF("%s\n", MARKER_PREFIX_MATCH);
                 PrintAuthorTrie(author_node, &nb_found, 3, fo);
+
+                if (nb_found == 0)
+                {
+                    fprintf(fo, "Niciun autor gasit.\n");
+                }
             }
             else
             {
                 int nb_found = 0;
 
                 DPRINTF("%s\n", MARKER_EXACT_MATCH);
-                PrintBookTrie(author_node ? author_node->value->books : NULL, &nb_found, -1, fo);
+                if (author_node)
+                {
+                    PrintBookTrie(author_node->value->books, &nb_found, -1, FALSE, fo);
+                }
+                else
+                {
+                    fprintf(fo, "Autorul %s nu face parte din recomandarile tale.\n", search_term);
+                }
             }
         }
         else if (0 == strcmp(command, "search_by_author"))
@@ -121,6 +146,11 @@ void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
 
                     DPRINTF("%s\n", MARKER_PREFIX_MATCH);
                     PrintAuthorTrie(author_node, &nb_found, 3, fo);
+
+                    if (nb_found == 0)
+                    {
+                        fprintf(fo, "Niciun autor gasit.\n");
+                    }
                 }
                 else
                 {
@@ -134,12 +164,17 @@ void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
                         int nb_found = 0;
 
                         DPRINTF("%s\n", MARKER_PREFIX_MATCH);
-                        PrintBookTrie(book_node, &nb_found, 3, fo);
+                        PrintBookTrie(book_node, &nb_found, 3, FALSE, fo);
+
+                        if (nb_found == 0)
+                        {
+                            fprintf(fo, "Nicio carte gasita.\n");
+                        }
                     }
                     else
                     {
                         DPRINTF("%s\n", MARKER_PREFIX_MATCH);
-                        fprintf(fo, "-\n");
+                        fprintf(fo, "Autorul %s nu face parte din recomandarile tale.\n", search_term_author);
                     }
                 }
             }
@@ -152,12 +187,12 @@ void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
                     SearchBook(author_node->value->books, search_term_book, &book_node);
 
                     DPRINTF("%s\n", MARKER_EXACT_MATCH);
-                    PrintBookInfo(book_node ? book_node->value : NULL, fo);
+                    PrintBookInfo(book_node ? book_node->value : NULL, TRUE, fo);
                 }
                 else
                 {
                     DPRINTF("%s\n", MARKER_EXACT_MATCH);
-                    fprintf(fo, "-\n");
+                    fprintf(fo, "Autorul %s nu face parte din recomandarile tale.\n", search_term_author);
                 }
             }
         }
@@ -180,19 +215,10 @@ void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
                 }
 
                 DeleteBook(&books, title, FALSE);
-                DPRINTF("%s\n", MARKER_DELETE_MATCH);
-
-                int nb_found = 0;
-                PrintBookTrie(books, &nb_found, -1, fo);
-                if (nb_found == 0)
-                {
-                    fprintf(fo, "-\n");
-                }
             }
             else
             {
-                DPRINTF("%s\n", MARKER_DELETE_MATCH);
-                fprintf(fo, "-\n");
+                fprintf(fo, "Cartea %s nu exista in recomandarile tale.\n", title);
             }
         }
     }
