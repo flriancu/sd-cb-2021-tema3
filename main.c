@@ -205,7 +205,7 @@ void Test(book_trie_t **books, author_trie_t **authors, FILE *fi, FILE *fo)
             book_trie_t *book_node;
             SearchBook(*books, title, &book_node);
 
-            if (book_node)
+            if (book_node && book_node->value)
             {
                 author_trie_t *author_node;
                 SearchAuthor(*authors, book_node->value->author, &author_node);
