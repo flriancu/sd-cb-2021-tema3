@@ -1,3 +1,6 @@
+add_book a:i:10:256
+delete_book a
+search_by_author i:a
 add_book lorelei:ionel teodoreanu:10:256
 add_book la lilieci:marin sorescu:9.8:500
 add_book la medeleni:ionel teodoreanu:8.22:768

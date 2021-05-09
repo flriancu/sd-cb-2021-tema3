@@ -151,6 +151,11 @@ void DeleteAuthorAux(author_trie_t **t, const char *key, int depth)
     int index = GetIndexOf(key[depth]);
     DeleteAuthorAux(&(*t)->children[index], key, depth + 1);
 
+    if (depth == 0)
+    {
+        return;
+    }
+
     if (IsAuthorNodeEmpty(*t) && (*t)->value == NULL)
     {
         FreeAuthorTrieNode(t);

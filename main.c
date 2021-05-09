@@ -7,7 +7,7 @@
 #include <string.h>
 
 
-void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
+void Test(book_trie_t **books, author_trie_t **authors, FILE *fi, FILE *fo)
 {
     const int k_buffer_len = 255;
     char buffer[k_buffer_len];
@@ -26,8 +26,8 @@ void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
             book_info_t *b;
 
             AllocBookInfo(&b, title, author, (float)atof(rating), atoi(nb_pages));
-            AddBook(books, title, b);
-            AddAuthor(authors, author, b);
+            AddBook(*books, title, b);
+            AddAuthor(*authors, author, b);
         }
         else if (0 == strcmp(command, "search_book"))
         {
@@ -40,7 +40,7 @@ void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
             }
 
             book_trie_t *book_node;
-            SearchBook(books, search_term, &book_node);
+            SearchBook(*books, search_term, &book_node);
             
             DPRINTF("\n<%s>\n", search_term);
             if (last_char == TOKEN_AUTOCOMPLETE)
@@ -81,7 +81,7 @@ void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
             }
 
             author_trie_t *author_node;
-            SearchAuthor(authors, search_term, &author_node);
+            SearchAuthor(*authors, search_term, &author_node);
 
             DPRINTF("\n<%s>\n", search_term);
             if (last_char == TOKEN_AUTOCOMPLETE)
@@ -134,7 +134,7 @@ void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
             }
 
             author_trie_t *author_node;
-            SearchAuthor(authors, search_term_author, &author_node);
+            SearchAuthor(*authors, search_term_author, &author_node);
 
             DPRINTF("\n<%s:%s>\n", search_term_author, search_term_book);
             if (last_char == TOKEN_AUTOCOMPLETE)
@@ -203,20 +203,20 @@ void Test(book_trie_t *books, author_trie_t *authors, FILE *fi, FILE *fo)
             char *title = strtok(NULL, "\n");
 
             book_trie_t *book_node;
-            SearchBook(books, title, &book_node);
+            SearchBook(*books, title, &book_node);
 
             if (book_node)
             {
                 author_trie_t *author_node;
-                SearchAuthor(authors, book_node->value->author, &author_node);
+                SearchAuthor(*authors, book_node->value->author, &author_node);
                 DeleteBook(&author_node->value->books, title, TRUE);
 
                 if (author_node->value->books == NULL)
                 {
-                    DeleteAuthor(&author_node, author_node->value->name);
+                    DeleteAuthor(authors, author_node->value->name);
                 }
 
-                DeleteBook(&books, title, FALSE);
+                DeleteBook(books, title, FALSE);
             }
             else
             {
@@ -258,7 +258,7 @@ int main(const int argc, const char **argv)
     AllocBookTrieNode(&books);
     AllocAuthorTrieNode(&authors);
 
-    Test(books, authors, fi, fo);
+    Test(&books, &authors, fi, fo);
 
     fclose(fi);
 
