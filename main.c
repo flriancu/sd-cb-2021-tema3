@@ -23,11 +23,17 @@ void Test(book_trie_t **books, author_trie_t **authors, FILE *fi, FILE *fo)
             char *rating = strtok(NULL, ":");
             char *nb_pages = strtok(NULL, "\n");
 
-            book_info_t *b;
+            book_trie_t *book_node;
 
-            AllocBookInfo(&b, title, author, (float)atof(rating), atoi(nb_pages));
-            AddBook(*books, title, b);
-            AddAuthor(*authors, author, b);
+            SearchBook(*books, title, &book_node);
+            if (book_node == NULL)
+            {
+                book_info_t *b;
+
+                AllocBookInfo(&b, title, author, (float)atof(rating), atoi(nb_pages));
+                AddBook(*books, title, b);
+                AddAuthor(*authors, author, b);
+            }
         }
         else if (0 == strcmp(command, "search_book"))
         {
