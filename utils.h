@@ -24,7 +24,7 @@ int GetIndexOf(char c);
 #define VERBOSE_MEMORY          FALSE
 #define VERBOSE_DEBUG           FALSE
 
-#define USE_CUSTOM_ARGS         TRUE
+#define USE_CUSTOM_ARGS         FALSE
 #define CUSTOM_ARG_INPUT        "commands.txt"
 
 // Debug utilities

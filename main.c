@@ -261,6 +261,10 @@ int main(const int argc, const char **argv)
     Test(&books, &authors, fi, fo);
 
     fclose(fi);
+    if (fo != stdout)
+    {
+        fclose(fo);
+    }
 
     FreeBookTrie(&books, FALSE);
     FreeAuthorTrie(&authors);
