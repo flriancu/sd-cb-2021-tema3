@@ -26,7 +26,7 @@ void Test(book_trie_t **books, author_trie_t **authors, FILE *fi, FILE *fo)
             book_trie_t *book_node;
 
             SearchBook(*books, title, &book_node);
-            if (book_node == NULL)
+            if (book_node == NULL || book_node->value == NULL)
             {
                 book_info_t *b;
 
