@@ -65,7 +65,7 @@ void Test(book_trie_t **books, author_trie_t **authors, FILE *fi, FILE *fo)
             {
                 DPRINTF("%s\n", MARKER_EXACT_MATCH);
 
-                if (book_node)
+                if (book_node && book_node->value)
                 {
                     fprintf(fo, "Informatii recomandare: ");
                     PrintBookInfo(book_node->value, TRUE, fo);
@@ -194,8 +194,15 @@ void Test(book_trie_t **books, author_trie_t **authors, FILE *fi, FILE *fo)
                     SearchBook(author_node->value->books, search_term_book, &book_node);
 
                     DPRINTF("%s\n", MARKER_EXACT_MATCH);
-                    fprintf(fo, "Informatii recomandare: ");
-                    PrintBookInfo(book_node ? book_node->value : NULL, TRUE, fo);
+                    if (book_node && book_node->value)
+                    {
+                        fprintf(fo, "Informatii recomandare: ");
+                        PrintBookInfo(book_node ? book_node->value : NULL, TRUE, fo);
+                    }
+                    else
+                    {
+                        fprintf(fo, "Cartea %s nu exista in recomandarile tale.\n", search_term_book);
+                    }
                 }
                 else
                 {
