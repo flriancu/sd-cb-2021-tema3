@@ -197,7 +197,7 @@ void Test(book_trie_t **books, author_trie_t **authors, FILE *fi, FILE *fo)
                     if (book_node && book_node->value)
                     {
                         fprintf(fo, "Informatii recomandare: ");
-                        PrintBookInfo(book_node ? book_node->value : NULL, TRUE, fo);
+                        PrintBookInfo(book_node->value, TRUE, fo);
                     }
                     else
                     {
