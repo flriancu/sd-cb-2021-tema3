@@ -10,7 +10,7 @@ def get_special_tokens():
     return "_~:\r\n"
 
 
-def sanitize():
+def detect_non_ascii():
     input_dir = os.path.join("checker", "_test", "input")
 
     for file_name in os.listdir(input_dir):
@@ -28,4 +28,4 @@ def sanitize():
                     print(f"char [{c}]: file {file_name}, row {i+1}, col {j+1}")
 
 if __name__ == "__main__":
-    sanitize()
+    detect_non_ascii()
